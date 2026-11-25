@@ -12,7 +12,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="preload" href="assets/fonts/Sora-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="assets/fonts/Montserrat-Regular.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/styles.css?v=2026-11-25b" />
 </head>
 <body class="page-home">
   <a class="skip" href="#main">Skip to content</a>
@@ -30,7 +30,7 @@
 
   <!-- ============ MENU (pantalla completa) ============ -->
   <div class="menu" id="menu" aria-hidden="true">
-    <div class="menu__preview" aria-hidden="true"><img src="assets/img/r21.jpg" alt="" /></div>
+    <div class="menu__preview" aria-hidden="true"><img src="assets/img/r21.jpg" alt="" loading="lazy" decoding="async" /></div>
     <nav class="menu__nav" aria-label="Menu">
       <a href="index.html" aria-current="page" data-img="assets/img/r12.jpg"><small>00</small>Home<span class="menu__arrow">→</span></a>
       <a href="work.html" data-img="assets/img/r21.jpg"><small>01</small>Work<span class="menu__arrow">→</span></a>
@@ -74,9 +74,9 @@
     </section>
     <!-- ============ REEL (pantalla completa) ============ -->
     <section class="reelfull" id="reel" aria-label="Showreel">
-      <video class="reelfull__video" muted playsinline preload="auto" poster="assets/video/reel-poster.jpg">
-        <source src="assets/video/reel.mp4" type="video/mp4" />
-      </video>
+      <!-- El video se carga recién cuando el usuario se acerca a esta sección (ver js/main.js). 720p en pantallas chicas, 1080p en grandes. -->
+      <video class="reelfull__video" muted playsinline preload="none" poster="assets/video/reel-poster.jpg"
+        data-src="assets/video/reel.mp4" data-src-sm="assets/video/reel-720.mp4"></video>
       <!-- Botón grande central: play / replay -->
       <button class="reelfull__big" type="button" aria-label="Play showreel">
         <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg>
@@ -147,6 +147,6 @@
     </aside>
   </div>
 
-  <script src="js/main.js" defer></script>
+  <script src="js/main.js?v=2026-11-25b" defer></script>
 </body>
 </html>

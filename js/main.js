@@ -165,6 +165,7 @@
       $('.reelfull__big-label', big).textContent = video.ended ? 'Watch again' : 'Play reel';
     };
     const toggle = () => {
+      if (!video.currentSrc && !video.src) load();
       if (video.ended) { video.currentTime = 0; }
       if (video.paused || video.ended) { userPaused = false; video.play().catch(() => {}); }
       else { userPaused = true; video.pause(); }
@@ -178,7 +179,6 @@
       bar.style.setProperty('--p', (bar.value / 10) + '%');
     });
     video.addEventListener('error', () => { $('.reelfull__error', reel).hidden = false; }, true);
-    $('source', video)?.addEventListener('error', () => { $('.reelfull__error', reel).hidden = false; });
     big.addEventListener('click', toggle);
     playBtn.addEventListener('click', toggle);
     video.addEventListener('click', toggle);
@@ -199,6 +199,20 @@
       else if (el.requestFullscreen) el.requestFullscreen();
       else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
     });
+    // Carga diferida: el archivo se pide recién cuando la sección está cerca de la pantalla
+    let loaded = false;
+    const load = () => {
+      if (loaded) return; loaded = true;
+      const small = matchMedia('(max-width: 900px)').matches || (navigator.connection && navigator.connection.saveData);
+      video.src = small ? video.dataset.srcSm : video.dataset.src;
+      video.preload = 'auto';
+      video.load();
+    };
+    // Se dispara con el primer scroll / toque, o al pasar el mouse por "Watch the reel"
+    const kick = (e) => { if (scrollY > 10 || e.type !== 'scroll') { load(); ['scroll', 'touchstart', 'wheel', 'keydown'].forEach(e => removeEventListener(e, kick)); } };
+    ['scroll', 'touchstart', 'wheel', 'keydown'].forEach(e => addEventListener(e, kick, { passive: true }));
+    $('.cover__link')?.addEventListener('mouseenter', load, { once: true });
+    if (scrollY > 10) load();
     // Autoplay (sin sonido) al entrar en pantalla; pausa al salir. No reinicia si terminó o si el usuario lo pausó.
     new IntersectionObserver(([en]) => {
       document.body.classList.toggle('reel-in-view', en.isIntersecting);
