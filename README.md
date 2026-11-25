@@ -5,7 +5,7 @@ Landing page de **Casing Visuals** (HTML + CSS + JS vanilla, sin build). Lista p
 ## Estructura
 
 ```
-index.html          → home tipo portada: video a pantalla completa + menú
+index.html          → home: hero + showreel a pantalla completa (assets/video/reel.mp4)
 work.html           → trabajos
 services.html       → servicios
 about.html          → nosotros + creencias + proceso
@@ -14,6 +14,8 @@ contact.html        → formulario de contacto
 css/styles.css      → estilos (variables de marca arriba de todo)
 js/main.js          → interacciones (menú, reveals, carrusel, contadores)
 assets/img/         → fotos de recursos optimizadas (r01–r25.jpg)
+assets/img/clients/ → logos de clientes (blancos, fondo transparente)
+assets/video/       → reel.mp4 (comprimido) + reel-poster.jpg
 assets/logo/        → logo e isotipo en SVG (blanco, navy, violeta)
 assets/fonts/       → Sora y Montserrat en woff2
 favicon.svg
@@ -29,8 +31,9 @@ favicon.svg
 
 ## Pendientes (placeholders)
 
-- [ ] Video reel de la home → subir `assets/video/reel.mp4` (y opcional `reel.webm`). Ideal 1920×1080, 15–30 s, < 8 MB. Mientras no exista se ve la imagen poster. Si el video tiene audio, aparece el botón "Sound".
+- [x] Showreel en la home con controles.
 - [ ] Contenido definitivo de cada página interna.
+- [x] Logos de clientes en Work.
 - [ ] Proyectos reales en "Selected work" (imagen, marca, categoría, link).
 - [x] Email (info@casingvisuals.com) e Instagram + LinkedIn.
 - (assets/img/crossing.jpg queda guardado, sin uso por ahora.)
