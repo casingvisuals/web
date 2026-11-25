@@ -699,3 +699,35 @@ body.page-home { overflow: visible; height: auto; }
   .player__time { min-width: 0; font-size: 12px; }
 }
 body.reel-in-view .fab { opacity: 0; pointer-events: none; transform: scale(.8); }
+
+/* ---------- Reel en celular vertical: video completo 16:9 (sin recorte) ---------- */
+@media (orientation: portrait) and (max-width: 900px) {
+  .reelfull {
+    height: auto; min-height: 0; background: var(--ink);
+    display: flex; flex-direction: column;
+    padding: 56px 0 40px;
+  }
+  .reelfull::after { display: none; }
+  .reelfull::before { inset: 56px 0 auto 0; aspect-ratio: 16/9; height: auto; }
+  .reelfull__top { position: static; order: 0; padding: 0 var(--pad) 18px; font-size: 12px; }
+  .reelfull__video { position: relative; order: 1; inset: auto; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; background: #000; }
+  .reelfull__big { top: calc(56px + 50vw * 9 / 16 + 18px + 16px); }
+  .reelfull__big svg { width: 24px; height: 24px; padding: 20px; }
+  .reelfull__big-label { display: none; }
+  .player { position: static; order: 2; margin: 16px var(--pad) 0; opacity: 1 !important; }
+  .reelfull.is-playing .player { opacity: 1; }
+  .reelfull__error { bottom: auto; top: 60px; }
+}
+@media (orientation: portrait) and (max-width: 900px) {
+  .reelfull::before { display: none; }
+  .reelfull__video { transition: filter .4s; }
+  .reelfull:not(.is-playing) .reelfull__video { filter: brightness(.55); }
+  .reelfull__big { top: calc(56px + 37px + 28.125vw); }
+}
+@media (orientation: landscape) and (max-height: 560px) {
+  .reelfull { min-height: 0; height: 100svh; }
+  .reelfull__top { top: 14px; }
+  .player { bottom: 12px; padding: 4px 10px; }
+  .reelfull__big svg { width: 24px; height: 24px; padding: 20px; }
+  .reelfull__big-label { display: none; }
+}
