@@ -33,7 +33,7 @@ favicon.svg
 - [ ] Contenido definitivo de cada página interna.
 - [ ] Proyectos reales en "Selected work" (imagen, marca, categoría, link).
 - [x] Email (info@casingvisuals.com) e Instagram + LinkedIn.
-- [x] Póster del documental en assets/img/crossing.jpg.
+- (assets/img/crossing.jpg queda guardado, sin uso por ahora.)
 - [ ] Quitar el bloque "We're hiring" de creators.html cuando cierre la búsqueda.
 - [x] Formularios conectados a Formspree (`mjywrare`) — principal y panel rápido. Los mensajes llegan al email de la cuenta de Formspree.
 

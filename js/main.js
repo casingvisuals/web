@@ -150,16 +150,61 @@
     setTimeout(() => { mPrev.src = a.dataset.img; mPrev.classList.remove('is-swapping'); }, 200);
   }));
 
-  // Home: video del reel + botón de sonido (solo aparece si el video carga)
-  const video = $('.cover__video'), sound = $('.sound');
-  if (video && sound) {
-    video.addEventListener('playing', () => { sound.hidden = false; }, { once: true });
-    if (reduce) video.pause();
-    sound.addEventListener('click', () => {
-      video.muted = !video.muted;
-      sound.setAttribute('aria-pressed', !video.muted);
-      $('span', sound).textContent = video.muted ? 'Sound off' : 'Sound on';
-      if (!video.muted) video.play();
+  // Home: reel a pantalla completa con controles (play/pausa, progreso, tiempo, sonido, repetir)
+  const reel = $('.reelfull'), video = reel && $('.reelfull__video', reel);
+  if (video) {
+    const big = $('.reelfull__big', reel), playBtn = $('.player__play', reel), bar = $('.player__bar', reel);
+    const cur = $('.player__cur', reel), dur = $('.player__dur', reel), mute = $('.player__mute', reel);
+    const fmt = t => { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
+    let userPaused = false, seeking = false;
+    const setState = () => {
+      reel.classList.toggle('is-playing', !video.paused && !video.ended);
+      reel.classList.toggle('is-ended', video.ended);
+      playBtn.setAttribute('aria-label', video.ended ? 'Replay' : video.paused ? 'Play' : 'Pause');
+      big.setAttribute('aria-label', video.ended ? 'Replay showreel' : 'Play showreel');
+      $('.reelfull__big-label', big).textContent = video.ended ? 'Watch again' : 'Play reel';
+    };
+    const toggle = () => {
+      if (video.ended) { video.currentTime = 0; }
+      if (video.paused || video.ended) { userPaused = false; video.play().catch(() => {}); }
+      else { userPaused = true; video.pause(); }
+    };
+    ['play', 'pause', 'ended'].forEach(ev => video.addEventListener(ev, setState));
+    video.addEventListener('loadedmetadata', () => { dur.textContent = fmt(video.duration); });
+    if (video.readyState >= 1) dur.textContent = fmt(video.duration);
+    video.addEventListener('timeupdate', () => {
+      cur.textContent = fmt(video.currentTime);
+      if (!seeking && video.duration) { bar.value = Math.round(video.currentTime / video.duration * 1000); }
+      bar.style.setProperty('--p', (bar.value / 10) + '%');
     });
+    video.addEventListener('error', () => { $('.reelfull__error', reel).hidden = false; }, true);
+    $('source', video)?.addEventListener('error', () => { $('.reelfull__error', reel).hidden = false; });
+    big.addEventListener('click', toggle);
+    playBtn.addEventListener('click', toggle);
+    video.addEventListener('click', toggle);
+    bar.addEventListener('input', () => {
+      seeking = true; bar.style.setProperty('--p', (bar.value / 10) + '%');
+      if (video.duration) { video.currentTime = bar.value / 1000 * video.duration; cur.textContent = fmt(video.currentTime); }
+    });
+    bar.addEventListener('change', () => { seeking = false; });
+    mute.addEventListener('click', () => {
+      video.muted = !video.muted;
+      mute.setAttribute('aria-pressed', !video.muted);
+      mute.setAttribute('aria-label', video.muted ? 'Unmute' : 'Mute');
+      reel.classList.toggle('is-sound', !video.muted);
+    });
+    $('.player__fs', reel).addEventListener('click', () => {
+      const el = reel;
+      if (document.fullscreenElement) document.exitFullscreen();
+      else if (el.requestFullscreen) el.requestFullscreen();
+      else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
+    });
+    // Autoplay (sin sonido) al entrar en pantalla; pausa al salir. No reinicia si terminó o si el usuario lo pausó.
+    new IntersectionObserver(([en]) => {
+      document.body.classList.toggle('reel-in-view', en.isIntersecting);
+      if (en.isIntersecting) { if (!reduce && !userPaused && !video.ended) video.play().catch(() => {}); }
+      else if (!video.paused) video.pause();
+    }, { threshold: 0.4 }).observe(reel);
+    setState();
   }
 })();
